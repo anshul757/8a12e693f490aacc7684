@@ -1,26 +1,32 @@
+/*
+    This is the main page that contains the listing of the news.
+*/
+
+
+/*
+    imports
+*/
 import React, { Component } from 'react';
 import { Card, CardItem, Body, Button } from 'native-base';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 import InfiniteScroll from 'react-native-infinite-scrolling';
+import formatDate from '../Utils/Common';
 import axios from "axios";
 
-
+/*
+    classes
+*/
 class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
             dataSource: [],
-            page: 1,
+            page: 0,
             hasMoreData: false
         }
         this.renderData = this.renderData.bind(this);
         this.loadMoreData = this.loadMoreData.bind(this);
         this.getData = this.getData.bind(this);
-        this.formatDate = this.formatDate.bind(this);
-    }
-    formatDate(value) {
-        var date = new Date(value);
-        return ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
     }
     componentDidMount() {
         this.intervalId = setTimeout(() => {
@@ -52,7 +58,9 @@ class Home extends Component {
         return (
             <View style={styles.cardWrapper}>
                 <TouchableWithoutFeedback onPress={() => {
-
+                    this.props.navigation.navigate('Details', {
+                        data: item
+                    })
                 }}>
                     <Card>
                         <CardItem>
@@ -68,7 +76,7 @@ class Home extends Component {
                                         By:-{item.item.author}
                                     </Text>
                                     <Text style={styles.dateWrapper}>
-                                        {this.formatDate(item.item.created_at)}
+                                        {formatDate(item.item.created_at)}
                                     </Text>
                                 </View>
                             </Body>
@@ -93,6 +101,9 @@ class Home extends Component {
 
 export default Home;
 
+/*
+    styles
+*/
 const styles = StyleSheet.create({
     cardWrapper: {
         marginLeft: 20,
